@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="history-container">
+    <h2>History Compare</h2>
+    <h4>Total History: {{ history|length }}</h4>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert"> {% for msg in messages %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>File Compare</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% if history %}
+                {% for item in history %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.date }}</td>
+
+                    <td style="text-align:left;">
+                        <div>
+                            <b>Old:</b> {{ item.file1 }}
+                        </div>
+                        <div>
+                            <b>New:</b> {{ item.file2 }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('download_history', id=item.id) }}">
+                            <button class="btn-detail">Download</button>
+                        </a>
+
+                        <a href="{{ url_for('delete_history', id=item.id) }}"
+                           onclick="return confirm('Yakin ingin hapus data ini?')">
+                            <button class="btn-delete">Hapus</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">
+                        Belum ada histori
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

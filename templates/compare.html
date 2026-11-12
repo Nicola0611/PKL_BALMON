@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="compare-container">
+
+    <h2>Compare Data</h2>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert">
+                {% for msg in messages %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('upload_compare') }}" method="POST" enctype="multipart/form-data">
+        <div class="compare-box">
+
+            <div class="file-card">
+                <h3>Data Lama</h3>
+                <input type="file" name="file1" required>
+            </div>
+
+            <div class="file-card">
+                <h3>Data Baru</h3>
+                <input type="file" name="file2" required>
+            </div>
+
+        </div>
+
+        <div class="compare-action">
+            <button type="submit" id="compareBtn">Compare Sekarang</button>
+        </div>
+    </form>
+
+    {% if added or removed or changed or expiring %}
+
+    <div class="result-box">
+        <h3>Hasil Compare</h3>
+
+        <div class="summary">
+            <p>Added: {{ added|length }}</p>
+            <p>Removed: {{ removed|length }}</p>
+            <p>Changed: {{ changed|length }}</p>
+            <p>Expiring: {{ expiring|length }}</p>
+        </div>
+
+        <h4>Data Baru (Added)</h4>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in added %}
+                    <tr class="row-new">
+                        {% for col in columns %}
+                            <td>{{ row.get(col, '-') }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Data Dihapus (Removed)</h4>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in removed %}
+                    <tr class="row-removed">
+                        {% for col in columns %}
+                        <td>{{ row.get(col, '-') }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Data Berubah (Changed)</h4>
+        <table>
+            <tr>
+                <th>APPL_ID</th>
+                <th>Kolom</th>
+                <th>Old</th>
+                <th>New</th>
+            </tr>
+            {% for row in changed %}
+            <tr class="row-updated">
+                <td>{{ row.APPL_ID }}</td>
+                <td>{{ row.kolom }}</td>
+                <td>{{ row.old }}</td>
+                <td>{{ row.new }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h4>Licence Expiring</h4>
+        <table>
+            <tr>
+                <th>APPL_ID</th>
+                <th>CLNT_NAME</th>
+                <th>EXP DATE</th>
+                <th>SISA HARI</th>
+            </tr>
+            {% for row in expiring %}
+            <tr class="row-alert">
+                <td>{{ row.APPL_ID }}</td>
+                <td>{{ row.CLNT_NAME }}</td>
+                <td>{{ row.LICENCE_DATE }}</td>
+                <td>{{ row.SISA_HARI }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+    {% else %}
+        <p style="text-align:center;">Belum ada hasil compare</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

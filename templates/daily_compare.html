@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="compare-container">
+    <h2>Simulasi Auto Compare 1 Minggu</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert">
+                {% for msg in messages %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% endwith %}
+
+    {% if data %}
+        {% if data.status == "SUCCESS" %}
+        <div class="result-box">
+            <h3>Informasi Simulasi</h3>
+            <p>
+                <strong>Periode:</strong>
+                {{ data.start_file }}
+                →
+                {{ data.end_file }}
+            </p>
+            <p>
+                <strong>Jumlah Data:</strong>
+                {{ data.total_files }} Hari
+            </p>
+            <p>
+                <strong>Total Compare:</strong>
+                {{ data.total_compares }}
+            </p>
+            <p>
+                <strong>Waktu Simulasi:</strong>
+                {{ data.date }}
+            </p>
+        </div>
+
+        <div class="result-box">
+            <h3>Hari 1</h3>
+            <p>
+                <strong>
+                    {{ data.baseline }}
+                </strong>
+            </p>
+            <p>
+                Baseline / Data Awal
+            </p>
+            <p>
+                Belum dilakukan perbandingan karena
+                belum terdapat data hari sebelumnya.
+            </p>
+        </div>
+
+        {% for item in data.results %}
+        <div class="result-box">
+            <h3>
+                Hari {{ item.day }}
+            </h3>
+            <p>
+                <strong>Compare:</strong>
+                {{ item.previous_file }} → {{ item.today_file }}
+            </p>
+
+            <div class="summary">
+                <p>
+                    Added:
+                    <strong>
+                        {{ item.added|length }}
+                    </strong>
+                </p>
+                <p>
+                    Removed:
+                    <strong>
+                        {{ item.removed|length }}
+                    </strong>
+                </p>
+                <p>
+                    Changed:
+                    <strong>
+                        {{ item.changed|length }}
+                    </strong>
+                </p>
+                <p>
+                    Expiring:
+                    <strong>
+                        {{ item.expiring|length }}
+                    </strong>
+                </p>
+                <p>
+                    Total Changes:
+                    <strong>
+                        {{ item.total }}
+                    </strong>
+                </p>
+            </div>
+
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="result-box">
+            <h3>Simulasi Gagal</h3>
+            <p>
+                {{ data.message }}
+            </p>
+        </div>
+
+        {% endif %}
+
+    {% else %}
+        <div class="result-box">
+            <p>
+                Belum ada hasil simulasi.
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

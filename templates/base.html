@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="logo">
+            <span class="brand">Compare System</span>
+        </div>
+
+        <div class="nav-right">
+            <a href="/compare">Compare</a>
+
+            <div class="dropdown">
+                <a href="#">History ▾</a>
+                <div class="dropdown-menu">
+                    <a href="{{ url_for('history') }}">History Compare</a>
+                    <a href="{{ url_for('history_daily') }}">History Daily</a>
+                </div>
+            </div>
+
+            <a href="{{ url_for('daily_compare') }}">Auto Compare</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

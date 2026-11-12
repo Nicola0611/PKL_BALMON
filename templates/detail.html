@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Detail Compare</h2>
+
+<h3>Added</h3>
+    <div class="table-wrapper">
+        <table>
+            {% if data.added %}
+            <thead>
+                <tr>
+                    {% for col in data.columns %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data.added %}
+                <tr>
+                    {% for col in data.columns %}
+                        <td>{{ row.get(col, '-') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+<h3>Removed</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nama</th>
+        </tr>
+        {% for d in data.removed %}
+        <tr>
+            <td>{{ d.APPL_ID }}</td>
+            <td>{{ d.CLNT_NAME }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<h3>Changed</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Kolom</th>
+            <th>Old</th>
+            <th>New</th>
+        </tr>
+        {% for d in data.changed %}
+        <tr>
+            <td>{{ d.APPL_ID }}</td>
+            <td>{{ d.kolom }}</td>
+            <td>{{ d.old }}</td>
+            <td>{{ d.new }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<h3>Expiring</h3>
+    <ul>{% for d in data.expiring %}
+        <li>{{ d.APPL_ID }} - {{ d.CLNT_NAME }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
